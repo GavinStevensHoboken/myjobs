@@ -1,3 +1,4 @@
+import React, { useEffect} from 'react';
 import { Swiper, SwiperSlide} from 'swiper/react';
 import { Pagination, Mousewheel, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -6,6 +7,31 @@ import Sidebar from './components/Sidebar';
 import './App.css'
 
 function App() {
+  useEffect(() => {
+    const addRipple = (e) => {
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+
+      ripple.style.left = `${e.clientX}px`;
+      ripple.style.top = `${e.clientY}px`;
+      ripple.style.width = ripple.style.height = '100px';
+      ripple.style.marginLeft = '-50px';
+      ripple.style.marginTop = '-50px';
+
+      document.body.appendChild(ripple);
+
+      ripple.addEventListener('animationend', () => {
+        ripple.remove();
+      });
+    };
+
+    document.addEventListener('click', addRipple);
+
+    // Clean up when App unmounts
+    return () => {
+      document.removeEventListener('click', addRipple);
+    };
+  }, []);
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar 固定在左侧，高度撑满全屏，滚动不会动 */}
@@ -26,7 +52,7 @@ function App() {
           </div>
           <div className="w-80 h-80 rounded-full overflow-hidden">
             <img
-              src='myjobs/selfie.jpeg'
+              src="/myjobs/selfie.jpeg"
               alt="Gavin Na"
               className="w-full h-full object-cover"
             />
